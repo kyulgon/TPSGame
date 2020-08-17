@@ -6,6 +6,7 @@ public class PlayerMovement : MonoBehaviour
 {
     private CharacterController characterController;
     private PlayerInput playerInput;
+    private PlayerShooter playerShooter;
     private Animator animator;
 
     private Camera followCam;
@@ -28,6 +29,7 @@ public class PlayerMovement : MonoBehaviour
     void Start()
     {
         playerInput = GetComponent<PlayerInput>();
+        playerShooter = GetComponent<PlayerShooter>();
         animator = GetComponent<Animator>();
         characterController = GetComponent<CharacterController>();
         followCam = Camera.main;
@@ -35,7 +37,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void FixedUpdate() // 물리 업데이트
     {
-        if (currentSpeed > 0.2f || playerInput.fire)
+        if (currentSpeed > 0.2f || playerInput.fire ||  playerShooter.aimState == PlayerShooter.AimState.HipFire)
         {
             Rotate();
         }           

@@ -16,7 +16,7 @@ public class Gun : MonoBehaviour
     private LineRenderer bulletLineRenderer;
 
     private AudioSource gunAudioPlayer;
-    private AudioClip shotClip;
+    public AudioClip shotClip;
     public AudioClip reloadClip;
 
     public ParticleSystem muzzleFlashEffect;
@@ -89,6 +89,8 @@ public class Gun : MonoBehaviour
 
             lastFireTime = Time.time;
             Shot(fireTransform.position,fireDirection);
+
+            return true;
         }
 
         return false;
