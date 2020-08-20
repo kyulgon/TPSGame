@@ -1,21 +1,15 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using TMPro.EditorUtilities;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
     private static GameManager instance;
-
+    
     public static GameManager Instance
     {
         get
         {
-            if(instance == null)
-            {
-                instance = FindObjectOfType<GameManager>();
-            }
-
+            if (instance == null) instance = FindObjectOfType<GameManager>();
+            
             return instance;
         }
     }
@@ -25,24 +19,21 @@ public class GameManager : MonoBehaviour
 
     private void Awake()
     {
-        if( instance!= this)
-        {
-            Destroy(gameObject);
-        }
+        if (Instance != this) Destroy(gameObject);
     }
-
-    private void AddScore(int newScore)
+    
+    public void AddScore(int newScore)
     {
-        if(!isGameover)
+        if (!isGameover)
         {
             score += newScore;
-            // UIManager.Instance.UpdateScoreText(score);
+            UIManager.Instance.UpdateScoreText(score);
         }
     }
-
+    
     public void EndGame()
     {
         isGameover = true;
-        // UIManager.Instance.SetActiveGameoverUI(true);
+        UIManager.Instance.SetActiveGameoverUI(true);
     }
 }

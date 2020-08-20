@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public struct DamageMessage
 {
@@ -9,5 +7,4 @@ public struct DamageMessage
 
     public Vector3 hitPoint;
     public Vector3 hitNormal;
-   
 }

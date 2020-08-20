@@ -1,5 +1,5 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System;
+using System.Collections;
 using UnityEngine;
 
 public class Gun : MonoBehaviour
@@ -11,17 +11,17 @@ public class Gun : MonoBehaviour
         Reloading
     }
     public State state { get; private set; }
-
+    
     private PlayerShooter gunHolder;
     private LineRenderer bulletLineRenderer;
-
+    
     private AudioSource gunAudioPlayer;
     public AudioClip shotClip;
     public AudioClip reloadClip;
-
+    
     public ParticleSystem muzzleFlashEffect;
     public ParticleSystem shellEjectEffect;
-
+    
     public Transform fireTransform;
     public Transform leftHandMount;
 
@@ -34,7 +34,7 @@ public class Gun : MonoBehaviour
 
     public float timeBetFire = 0.12f;
     public float reloadTime = 1.8f;
-
+    
     [Range(0f, 10f)] public float maxSpread = 3f;
     [Range(1f, 10f)] public float stability = 1f;
     [Range(0.01f, 3f)] public float restoreFromRecoilSpeed = 2f;
@@ -64,7 +64,7 @@ public class Gun : MonoBehaviour
     {
         magAmmo = magCapacity;
         currentSpread = 0f;
-        lastFireTime = 0f;
+        lastFireTime = 0;
         state = State.Ready;
     }
 
@@ -79,8 +79,8 @@ public class Gun : MonoBehaviour
         {
             var fireDirection = aimTarget - fireTransform.position;
 
-            var xError = Utiltiy.GetRandomNormalDistribution(0f, currentSpread);
-            var yError = Utiltiy.GetRandomNormalDistribution(0f, currentSpread);
+            var xError = Utility.GetRandomNormalDistribution(0f, currentSpread);
+            var yError = Utility.GetRandomNormalDistribution(0f, currentSpread);
 
             fireDirection = Quaternion.AngleAxis(yError, Vector3.up) * fireDirection;
             fireDirection = Quaternion.AngleAxis(xError, Vector3.right) * fireDirection;
@@ -88,14 +88,14 @@ public class Gun : MonoBehaviour
             currentSpread += 1f / stability;
 
             lastFireTime = Time.time;
-            Shot(fireTransform.position,fireDirection);
+            Shot(fireTransform.position, fireDirection);
 
             return true;
         }
 
         return false;
     }
-
+    
     private void Shot(Vector3 startPoint, Vector3 direction)
     {
         RaycastHit hit;
@@ -116,7 +116,6 @@ public class Gun : MonoBehaviour
 
                 target.ApplyDamage(damageMessage);
             }
-
             hitPosition = hit.point;
         }
         else
@@ -127,8 +126,8 @@ public class Gun : MonoBehaviour
         StartCoroutine(ShotEffect(hitPosition));
 
         magAmmo--;
-        if (magAmmo <= 0)
-            state = State.Empty;
+        if (magAmmo <= 0) state = State.Empty;
+
     }
 
     private IEnumerator ShotEffect(Vector3 hitPosition)
@@ -146,17 +145,17 @@ public class Gun : MonoBehaviour
 
         bulletLineRenderer.enabled = false;
     }
-
+    
     public bool Reload()
     {
-        if(state == State.Reloading || ammoRemain <=0 || magAmmo >= magCapacity)
+        if(state == State.Reloading || ammoRemain <= 0 || magAmmo >= magCapacity)
         {
             return false;
         }
 
         StartCoroutine(ReloadRoutine());
 
-        return true;
+        return true ;
     }
 
     private IEnumerator ReloadRoutine()

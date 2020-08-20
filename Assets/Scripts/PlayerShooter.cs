@@ -1,7 +1,5 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using TMPro.EditorUtilities;
-using UnityEngine;
+﻿using UnityEngine;
+
 
 public class PlayerShooter : MonoBehaviour
 {
@@ -15,22 +13,22 @@ public class PlayerShooter : MonoBehaviour
 
     public Gun gun;
     public LayerMask excludeTarget;
-
+    
     private PlayerInput playerInput;
     private Animator playerAnimator;
     private Camera playerCamera;
 
-    private float waitingTimeForReleasingAim = 2.5f;
+    private float waitingTimeForReleasingAim = 2.5f; // 발사 후 대기 시간 지정
     private float lastFireInputTime;
 
+    
     private Vector3 aimPoint;
-    private bool linedUp => !(Mathf.Abs(playerCamera.transform.eulerAngles.y - transform.eulerAngles.y) > 1f);
-    private bool hasEnoughDistance => !Physics.Linecast(transform.position + Vector3.up * gun.fireTransform.position.y, gun.fireTransform.position, ~excludeTarget);
-
-
-    private void Awake()
+    private bool linedUp => !(Mathf.Abs( playerCamera.transform.eulerAngles.y - transform.eulerAngles.y) > 1f);
+    private bool hasEnoughDistance => !Physics.Linecast(transform.position + Vector3.up * gun.fireTransform.position.y,gun.fireTransform.position, ~excludeTarget);
+    
+    void Awake()
     {
-        if(excludeTarget != (excludeTarget | (1 << gameObject.layer))) // Player 자신을 쏘지 않게 처리
+        if (excludeTarget != (excludeTarget | (1 << gameObject.layer))) // 플레이어 자신을 공격 예외 처리
         {
             excludeTarget |= 1 << gameObject.layer;
         }
@@ -58,18 +56,18 @@ public class PlayerShooter : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if(playerInput.fire)
+        if (playerInput.fire)
         {
             lastFireInputTime = Time.time;
             Shoot();
         }
-        else if(playerInput.reload)
+        else if (playerInput.reload)
         {
             Reload();
         }
     }
 
-    public void Update()
+    private void Update()
     {
         UpdateAimTarget();
 
@@ -91,25 +89,21 @@ public class PlayerShooter : MonoBehaviour
     {
         if(aimState == AimState.Idle)
         {
-            if(linedUp)
+            if (linedUp) aimState = AimState.HipFire;
+        }
+        else if(aimState == AimState.HipFire)
+        {
+            if(hasEnoughDistance)
             {
-                aimState = AimState.HipFire;
-            }
-            else if(aimState == AimState.HipFire)
-            {
-                if(hasEnoughDistance)
+                if(gun.Fire(aimPoint))
                 {
-                    if(gun.Fire(aimPoint))
-                    {
-                        playerAnimator.SetTrigger("Shoot");
-                    }
-                }
-                else
-                {
-                    aimState = AimState.Idle;
+                    playerAnimator.SetTrigger("Shoot");
                 }
             }
-
+            else
+            {
+                aimState = AimState.Idle;
+            }
         }
     }
 
@@ -140,16 +134,17 @@ public class PlayerShooter : MonoBehaviour
         {
             aimPoint = playerCamera.transform.position + playerCamera.transform.forward * gun.fireDistance;
         }
+ 
     }
 
     private void UpdateUI()
     {
-        //if (gun == null || UIManger.Instance == null) return;
-
-        //UIManager.Instance.UpdateAmmoText(gun.magAmmo, gun.ammoRemain);
-
-        //UIManager.Instance.SetActiveCrosshair(hasEnoughDistance);
-        //UIManager.Instance.UpdateCrossHairPosition(aimPoint);
+        if (gun == null || UIManager.Instance == null) return;
+        
+        UIManager.Instance.UpdateAmmoText(gun.magAmmo, gun.ammoRemain);
+        
+        UIManager.Instance.SetActiveCrosshair(hasEnoughDistance);
+        UIManager.Instance.UpdateCrossHairPosition(aimPoint);
     }
 
     private void OnAnimatorIK(int layerIndex)
@@ -162,5 +157,4 @@ public class PlayerShooter : MonoBehaviour
         playerAnimator.SetIKPosition(AvatarIKGoal.LeftHand, gun.leftHandMount.position);
         playerAnimator.SetIKRotation(AvatarIKGoal.LeftHand, gun.leftHandMount.rotation);
     }
-
 }
