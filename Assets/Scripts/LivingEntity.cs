@@ -12,7 +12,7 @@ public class LivingEntity : MonoBehaviour, IDamageable
     private const float minTimeBetDamaged = 0.1f;
     private float lastDamagedTime;
 
-    protected bool IsInvulnerabe
+    protected bool IsInvulnerable
     {
         get
         {
@@ -30,7 +30,7 @@ public class LivingEntity : MonoBehaviour, IDamageable
 
     public virtual bool ApplyDamage(DamageMessage damageMessage)
     {
-        if (IsInvulnerabe || damageMessage.damager == gameObject || dead) return false;
+        if (IsInvulnerable || damageMessage.damager == gameObject || dead) return false;
 
         lastDamagedTime = Time.time;
         health -= damageMessage.amount;
@@ -39,6 +39,7 @@ public class LivingEntity : MonoBehaviour, IDamageable
 
         return true;
     }
+  
     
     public virtual void RestoreHealth(float newHealth)
     {
