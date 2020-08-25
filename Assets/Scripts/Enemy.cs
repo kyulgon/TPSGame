@@ -132,7 +132,7 @@ public class Enemy : LivingEntity
 
     private void FixedUpdate()
     {
-        if (dead) return;
+        if (dead) return; 
 
         if(state == State.AttackBegin || state == State.Attacking)
         {
@@ -141,6 +141,40 @@ public class Enemy : LivingEntity
 
             targetAngleY = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngleY, ref turnSmoothVelocity, turnSmoothTime);
             transform.eulerAngles = Vector3.up * targetAngleY;
+        }
+
+        if(state == State.Attacking)
+        {
+            var direction = transform.forward;
+            var deltaDistance = agent.velocity.magnitude * Time.deltaTime;
+
+            var size = Physics.SphereCastNonAlloc(attackRoot.position, attackRadius, direction, hits, deltaDistance, whatIsTarget);
+
+            for(var i =0; i < size; i++)
+            {
+                var attackTargetEntity = hits[i].collider.GetComponent<LivingEntity>();
+
+                if(attackTargetEntity != null && !lastAttackedTargets.Contains(attackTargetEntity))
+                {
+                    var message = new DamageMessage();
+                    message.damager = gameObject;
+
+                    if(hits[i].distance <= 0f)
+                    {
+                        message.hitPoint = attackRoot.position;
+                    }
+                    else
+                    {
+                        message.hitPoint = hits[i].point;
+                    }
+
+                    message.hitNormal = hits[i].normal;
+
+                    attackTargetEntity.ApplyDamage(message);
+                    lastAttackedTargets.Add(attackTargetEntity);
+                    break;
+                }
+            }
         }
     }
 
@@ -199,6 +233,15 @@ public class Enemy : LivingEntity
     public override bool ApplyDamage(DamageMessage damageMessage)
     {
         if (!base.ApplyDamage(damageMessage)) return false;
+
+        if(targetEntity == null)
+        {
+            targetEntity = damageMessage.damager.GetComponent<LivingEntity>();
+        }
+
+        EffectManager.Instance.PlayHitEffect(damageMessage.hitPoint, damageMessage.hitNormal, transform, EffectManager.EffectType.Flesh);
+
+        audioPlayer.PlayOneShot(hitClip);
         
         return true;
     }
@@ -220,7 +263,16 @@ public class Enemy : LivingEntity
 
     public void DisableAttack()
     {
-        state = State.Tracking;
+        if(hasTarget)
+        {
+            state = State.Tracking;
+        }
+        else
+        {
+            state = State.Patrol;
+        }
+
+       
         
         agent.isStopped = false;
     }
@@ -254,6 +306,15 @@ public class Enemy : LivingEntity
     
     public override void Die()
     {
+        base.Die();
 
+        GetComponent<Collider>().enabled = false;
+
+        agent.enabled = false;
+
+        animator.applyRootMotion = true;
+        animator.SetTrigger("Die");
+
+        audioPlayer.PlayOneShot(deathClip);
     }
 }

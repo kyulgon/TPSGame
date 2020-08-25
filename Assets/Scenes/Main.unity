@@ -1656,7 +1656,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1372442579}
-  m_LocalRotation: {x: -0.06137744, y: 0.26170078, z: 0.016678782, w: 0.9630511}
+  m_LocalRotation: {x: -0.061377443, y: 0.26170078, z: 0.016678777, w: 0.9630511}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -1934,7 +1934,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1650475389}
-  m_LocalRotation: {x: -0.007378467, y: 0.26222408, z: 0.002005061, w: 0.9649768}
+  m_LocalRotation: {x: -0.0073784627, y: 0.26222408, z: 0.0020050597, w: 0.9649768}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -1966,7 +1966,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1746208428}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.2, z: 0.4}
+  m_LocalPosition: {x: 0, y: 1.2, z: 0.5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 7280824933986141653}
@@ -2648,19 +2648,19 @@ MonoBehaviour:
   startingHealth: 100
   attackRoot: {fileID: 1746208429}
   eyeTransform: {fileID: 1543831237}
-  hitClip: {fileID: 0}
-  deathClip: {fileID: 0}
+  hitClip: {fileID: 8300000, guid: fa6655fa844df494fb3bd2e07576e4e2, type: 3}
+  deathClip: {fileID: 8300000, guid: 486f1e3b4e8b04fa1ad9aa1e1e09a569, type: 3}
   runSpeed: 10
   turnSmoothTime: 0.1
   damage: 30
-  attackRadius: 2
+  attackRadius: 0.5
   fieldOfView: 50
   viewDistance: 10
   patrolSpeed: 3
-  targetEntity: {fileID: 0}
+  targetEntity: {fileID: 8296172668063295607}
   whatIsTarget:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 256
 --- !u!1 &8296172668063295605 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 998800876681913730, guid: 7f3d7805c3ccc7447a1816096cd332a3,
