@@ -31,7 +31,7 @@ public class Enemy : LivingEntity
     
     private Renderer skinRenderer;
 
-    public float runSpeed = 10f;
+    public float runSpeed = 6f;
     [Range(0.01f, 2f)] public float turnSmoothTime = 0.1f;
     private float turnSmoothVelocity;
     
