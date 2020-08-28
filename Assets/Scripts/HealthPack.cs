@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
 
 public class HealthPack : MonoBehaviour, IItem
 {
@@ -6,6 +8,14 @@ public class HealthPack : MonoBehaviour, IItem
 
     public void Use(GameObject target)
     {
+        var livingEntity = target.GetComponent<LivingEntity>();
 
+        if(livingEntity != null)
+        {
+            livingEntity.RestoreHealth(health);
+        }
+
+        Destroy(gameObject);
     }
+    
 }
