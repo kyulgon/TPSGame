@@ -47,9 +47,11 @@ public class PlayerHealth : LivingEntity
     public override void Die()
     {
         base.Die();
+
+        UpdateUI();
+
         playerAudioPlayer.PlayOneShot(deathClip);
         animator.SetTrigger("Die");
 
-        UpdateUI();
     }
 }
